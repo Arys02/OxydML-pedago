@@ -1,6 +1,8 @@
 mod plot_utils;
 mod math_utils;
 mod MLModel;
+mod LinearRegression;
+mod TestUtils;
 
 fn main() {
     let mut x = 32;
