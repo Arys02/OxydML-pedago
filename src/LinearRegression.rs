@@ -1,13 +1,15 @@
 use ndarray::{array, Array1, Array2, ArrayView, Ix2, s};
 use crate::MLModel::Model;
 use crate::TestUtils;
-use crate::math_utils::sig;
+use crate::build_dataset_utils::sig;
 
 pub struct LinearRegressionModel {
     pub(crate) W : Array1<f64>
 }
 
 impl Model for LinearRegressionModel {
+    //fn build_model(&self)
+
     fn _get_trained_variable(&self) -> &Array1<f64> {
         &self.W
     }
@@ -21,11 +23,16 @@ impl Model for LinearRegressionModel {
             let mut Wbis = self.W.clone();
             for j in 0..(self.W.shape()[0]) {
                 let mut w = Wbis[j];
-                let mut sum = 0.;
+                let mut grad = 0.;
 
                 for i in 0..m {
+                    //getting the training example features [i]
                     let X_i = &X_train.slice(s![i, ..]);
+
+                    //getting the training example output
                     let Y_i = &Y_train.slice(s![i, ..]);
+
+                    //Hypotesis function : WᵗX
                     let mut hyp = self.W.dot(X_i);
 
                     if is_classification {
@@ -33,16 +40,18 @@ impl Model for LinearRegressionModel {
                     }
 
                     let loss = hyp - Y_i;
-
-                    sum += loss[[0]] * X_train[[i, j]];
-                    println!("sum : {}", sum);
+                    grad += loss[[0]] * X_train[[i, j]];
                 }
-                Wbis[j] = w - (alpha / mf) * sum;
-                println!("Weight UPDATED : {}", Wbis[j]);
+                //should implement the cost function W = W - (α / n) Σ (WᵗX - Y) * X
+                // for each W at the same time
+                Wbis[j] = w - (alpha / mf) * grad;
             }
-            self.W = Wbis
+            // updating W with new values
+            self.W = Wbis;
+            println!("new weight : {}", self.W)
         }
     }
+
 
     fn predict(&self) -> Array1<f64> {
         return array![1., 2.]
