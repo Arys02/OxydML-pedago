@@ -1,6 +1,6 @@
-use ndarray::{array, Axis};
+use ndarray::{array, Axis, s};
 use crate::LinearRegression::LinearRegressionModel;
-use crate::build_dataset_utils::{build_fake_dataset, write_dataset};
+use crate::build_dataset_utils::{build_fake_dataset, build_fake_dataset_no_bias, write_dataset};
 use crate::MLModel::Model;
 use crate::multi_layer_perceptron::MultiLayerPerceptron;
 use crate::plot_utils::get_csv2_f64;
@@ -20,15 +20,15 @@ fn main() {
                           [0.0, 40.0], false);
      */
 
-    //let x2 = build_fake_dataset(2., 3., 5.);
-    //write_dataset("dataset/teste.txt", x2.clone()).expect("TODO: panic message");
+    //let x2 = build_fake_dataset_no_bias(2., 3., 5.);
+    //write_dataset("dataset/test_no_bias.txt", x2.clone()).expect("TODO: panic message");
 
-    let X = get_csv2_f64(&String::from("dataset/teste.txt")).unwrap();
+    let X = get_csv2_f64(&String::from("dataset/test_no_bias.txt")).unwrap();
 
     let (x1 , y1) = X.view().split_at(Axis(1), X.shape()[1] - 1);
 
     println!("X == {:?}", X);
-    //println!("{}", y1);
+    println!("{}", y1);
 
     /*
     let mut linear_r = LinearRegressionModel{ W: array![0.1, 0.1, 0.1] };
@@ -40,6 +40,7 @@ fn main() {
      */
 
     let mut mlp : MultiLayerPerceptron = MultiLayerPerceptron::new(vec![2, 2, 1]);
+    mlp._forward_propagate(x1.slice(s![0, ..]).into_owned());
 
 
     println!("{}", mlp);
