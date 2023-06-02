@@ -23,27 +23,25 @@ fn main() {
     //let x2 = build_fake_dataset_no_bias(2., 3., 5.);
     //write_dataset("dataset/test_no_bias.txt", x2.clone()).expect("TODO: panic message");
 
-    let X = get_csv2_f64(&String::from("dataset/test_no_bias.txt")).unwrap();
+    let X = get_csv2_f64(&String::from("dataset/simple_linear.txt")).unwrap();
 
     let (x1 , y1) = X.view().split_at(Axis(1), X.shape()[1] - 1);
 
     println!("X == {:?}", X);
     println!("{}", y1);
 
-    /*
-    let mut linear_r = LinearRegressionModel{ W: array![0.1, 0.1, 0.1] };
-    linear_r._fit(x1.into_owned(), y1.into_owned(), 5000, 0.1, false);
+    let mut linear_r = LinearRegressionModel{ W: array![0.1, 0.1] };
+    linear_r._fit(x1.into_owned(), y1.into_owned(), 5000, 0.01, false);
 
-    let result_w = linear_r._get_trained_variable();
+    let result_w = linear_r.predict(array![5.0]);
     println!("{} Hello, world!", result_w);
 
-     */
 
-    let mut mlp : MultiLayerPerceptron = MultiLayerPerceptron::new(vec![2, 2, 1]);
-    mlp._forward_propagate(x1.slice(s![0, ..]).into_owned());
+    //let mut mlp : MultiLayerPerceptron = MultiLayerPerceptron::new(vec![2, 2, 1]);
+    //mlp._forward_propagate(x1.slice(s![0, ..]).into_owned());
 
 
-    println!("{}", mlp);
+    //println!("{}", mlp);
 
 
 }

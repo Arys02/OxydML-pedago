@@ -18,9 +18,12 @@ pub struct MultiLayerPerceptron {
     //vector with size of each layers
     pub layers : Vec<usize>,
     //pub
-
     //vector with every weight layers
     pub(crate) W : Vec<Array2<f64>>,
+
+    //TODO
+    activation : fn(a: &f64) -> f64,
+    seed: i32,
 }
 
 
@@ -58,14 +61,15 @@ impl MultiLayerPerceptron {
 
         MultiLayerPerceptron {
             layers,
-            W : weight
+            W : weight,
+            seed : 10,
+            activation : sig
         }
     }
 
     pub fn _forward_propagate(&self, X_example : Array1<f64>) -> Array1<f64> {
 
         let mut a = X_example.clone();
-
         for i in 0..(self.layers.len() - 1){
             let bias : Array1<f64> = array![1.0];
             a = concatenate![Axis(0), bias, a];
@@ -73,10 +77,9 @@ impl MultiLayerPerceptron {
             println!("a : {:?} \nw : {:?}\nz: {:?}", a, self.W[i],z);
             a = z.map(sig);
         }
-
         a
     }
-
+/*
     fn _back_forward_propagate(&self, x: Array1<f64>, y: Array1<f64>, alpha: f64) {
         let mut a = Vec::with_capacity(self.layers.l());
         let mut z = Vec::with_capacity(self.layers.l());
@@ -109,14 +112,10 @@ impl MultiLayerPerceptron {
         for i in (0..self.layers.len() - 1).rev() {
             let prev_a_with_bias = concatenate![Axis(0), bias, a[i].clone()];
             Δ[i] += error.dot(a[i].t());
-
             error = prev_a_with_bias - y_pred;
-
         }
-
     }
-
-
+ */
 }
 
 
